@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>API Hub Access</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet" />
+<style>
+:root {
+  --navy: #16303d;
+  --navy-2: #0f2430;
+  --teal-deep: #124a4a;
+  --green: #2ed88e;
+  --green-deep: #24d281;
+  --green-soft: #e7faf1;
+  --mint: #d6f5e8;
+  --red: #e11d48;
+  --red-soft: #ffe4e6;
+  --amber: #d97706;
+  --bg: #eef2f4;
+  --card: #ffffff;
+  --border: #e2e8ee;
+  --muted: #6b7c8d;
+  --text: #16303d;
+  --radius: 18px;
+  --shadow: 0 10px 28px rgba(15,36,48,.08);
+  --page-x: 28px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: Poppins, system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  font-size: 13px;
+}
+.ms {
+  font-family: 'Material Symbols Outlined';
+  font-weight: 300;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  user-select: none;
+}
+button, input, select { font: inherit; }
+.hidden { display: none !important; }
+/* APP — Healthor-like shell */
+#view-app { min-height: 100vh; background: var(--bg); }
+.hero {
+  background: linear-gradient(160deg, #12363f 0%, #0f2a34 55%, #16303d 100%);
+  color: #fff;
+  padding: 14px var(--page-x) 88px;
+  position: relative;
+  z-index: 1;
+}
+.hero-top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+}
+.brand { display:flex; align-items:center; gap:10px; justify-self:start; }
+.brand-mark {
+  width:34px; height:34px; border-radius:0;
+  background:transparent;
+  display:grid; place-items:center;
+  overflow:visible;
+}
+.brand-mark .brand-leaf {
+  width:22px; height:28px; display:block; object-fit:contain;
+}
+.brand-name { font-size:18px; font-weight:700; letter-spacing:-.02em; }
+.brand-name span { color: var(--green); }
+
+.pill-nav {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(8px);
+}
+.pill-nav button {
+  border: 0; background: transparent; color: rgba(255,255,255,.72);
+  padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 12.5px;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+}
+.pill-nav button .ms { font-size: 18px; opacity: .9; }
+.pill-nav button:hover { color: #fff; background: rgba(255,255,255,.08); }
+.pill-nav button.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(46,216,142,.35), rgba(36,210,129,.18));
+  box-shadow: inset 0 0 0 1px rgba(46,216,142,.25);
+}
+
+.hero-actions {
+  justify-self: end;
+  display: flex; align-items: center; gap: 10px;
+}
+.icon-round {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: #fff; cursor: pointer;
+  display: grid; place-items: center; position: relative;
+}
+.icon-round .ms { font-size: 20px; }
+.icon-round .dot {
+  position: absolute; top: 7px; right: 8px; width: 7px; height: 7px;
+  border-radius: 50%; background: #f43f5e; border: 1.5px solid #12363f;
+}
+.user-chip {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px 10px 4px 4px; border-radius: 999px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  cursor: pointer; color: #fff; position: relative;
+}
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), #0d9488);
+  color: var(--navy); font-weight: 800; font-size: 11px;
+  display: grid; place-items: center;
+}
+.user-meta { line-height: 1.15; text-align: left; }
+.user-meta strong { display:block; font-size:12.5px; font-weight:600; }
+.user-meta span { font-size:10.5px; color: rgba(255,255,255,.55); }
+.menu {
+  position: absolute; top: calc(100% + 8px); right: 0; min-width: 160px;
+  background: #fff; color: var(--text); border-radius: 12px; border: 1px solid var(--border);
+  box-shadow: var(--shadow); display: none; z-index: 50; overflow: hidden;
+}
+.menu.open { display: block; }
+.menu button {
+  width: 100%; text-align: left; border: 0; background: none;
+  padding: 10px 12px; cursor: pointer; font-weight: 600; color: var(--navy);
+  display: flex; align-items: center; gap: 8px;
+}
+.menu button:hover { background: var(--green-soft); }
+.menu .ms { font-size: 18px; color: var(--muted); }
+
+.welcome {
+  margin-top: 28px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+}
+.welcome-sub {
+  margin-top: 6px;
+  max-width: 52rem;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: rgba(255,255,255,.72);
+}
+.welcome-sub.hidden { display: none; }
+
+/* content overlaps hero — same left/right edge as welcome text */
+.content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: none;
+  margin: -56px 0 0;
+  padding: 0 var(--page-x) 32px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.kpi {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px 18px 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,.85);
+}
+.kpi-ico {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: var(--green-soft); color: #0f6b4a;
+  display: grid; place-items: center; margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.kpi-ico .ms { font-size: 22px; line-height: 1; }
+.kpi-ico.den { background: #ffe4e6; color: var(--red); }
+.kpi-ico.bot { background: #ffedd5; color: var(--amber); }
+.kpi-ico.apps { background: #e0f2fe; color: #0369a1; }
+.kpi .lbl { font-size: 12.5px; color: var(--muted); font-weight: 500; }
+.kpi .val { font-size: 28px; font-weight: 700; margin-top: 4px; letter-spacing: -.02em; }
+.kpi .trend {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 10px; padding: 3px 8px; border-radius: 999px;
+  background: var(--green-soft); color: #0f6b4a;
+  font-size: 11px; font-weight: 600;
+}
+.kpi .trend .ms { font-size: 14px; }
+.kpi .trend.warn { background: var(--red-soft); color: var(--red); }
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 16px 18px;
+}
+.card-h {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; gap: 10px;
+}
+.card-h h2 { font-size: 15px; font-weight: 700; }
+.card-h .tools { display:flex; align-items:center; gap:6px; }
+.icon-quiet {
+  width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
+  background: #fff; color: var(--muted); cursor: pointer; display: grid; place-items: center;
+}
+.icon-quiet .ms { font-size: 18px; }
+.icon-quiet:hover { color: var(--navy); border-color: var(--green-deep); background: var(--green-soft); }
+
+.bar-row {
+  display: grid; grid-template-columns: 88px 1fr 40px;
+  gap: 8px; align-items: center; padding: 7px 0;
+}
+.bar-name { font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { height: 10px; border-radius: 999px; background: #eef3f6; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 999px; }
+.bar-val { font-size: 12px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+
+.spark {
+  height: 140px; width: 100%;
+  display: block;
+}
+.legend { display:flex; gap:12px; margin-top: 8px; font-size: 11px; color: var(--muted); font-weight: 500; }
+.legend i {
+  display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px;
+}
+
+.stack-tables {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.card.table-card { padding: 14px 14px 8px; }
+.search-field {
+  display: flex; align-items: center; gap: 6px;
+  background: #f5f8fa; border: 1px solid var(--border); border-radius: 999px;
+  padding: 6px 12px; min-width: 180px;
+}
+.search-field .ms { font-size: 18px; color: var(--muted); }
+.search-field input {
+  border: 0; background: transparent; outline: none; width: 160px; font-size: 12px; color: var(--text);
+}
+.controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.controls select {
+  border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px;
+  background: #fff; color: var(--text); font-size: 12px; font-weight: 500;
+}
+/* Primary / secondary action buttons — app-wide */
+.btn-primary,
+.btn-create,
+.btn-green {
+  border: 1.5px solid transparent;
+  background: var(--navy);
+  color: #fff;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-sizing: border-box;
+  letter-spacing: -.01em;
+  transition: background .15s ease, box-shadow .15s ease;
+}
+.btn-primary .ms,
+.btn-create .ms,
+.btn-green .ms { font-size: 16px; line-height: 1; }
+.btn-primary:hover,
+.btn-create:hover,
+.btn-green:hover {
+  background: #1a4a45;
+  box-shadow: 0 0 0 1px rgba(46,216,142,.28);
+}
+.btn-secondary,
+.btn-cancel {
+  border: 1.5px solid #c5cbce;
+  background: #fff;
+  color: var(--navy);
+  padding: 0 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  letter-spacing: -.01em;
+  transition: background .15s ease, border-color .15s ease;
+}
+.btn-secondary:hover,
+.btn-cancel:hover {
+  background: #f7faf9;
+  border-color: #b9c1c5;
+}
+
+.table-scroll { overflow-x: auto; margin: 0 -4px; }
+table.dense {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+table.dense th, table.dense td {
+  padding: 10px 6px;
+  font-size: 12px;
+  text-align: left;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+table.dense thead th {
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  padding-top: 4px; padding-bottom: 8px;
+}
+table.dense tbody tr { border-bottom: 1px solid #eef2f5; }
+table.dense tbody tr:last-child { border-bottom: 0; }
+table.dense .num { text-align: right; font-variant-numeric: tabular-nums; }
+table.dense th:first-child, table.dense td:first-child { padding-left: 8px; }
+table.dense th:last-child, table.dense td:last-child { padding-right: 8px; }
+
+#summary-table { min-width: 1040px; }
+#summary-table th:nth-child(1), #summary-table td:nth-child(1) { width: 11%; }
+#summary-table th:nth-child(2), #summary-table td:nth-child(2) { width: 13%; }
+#summary-table th:nth-child(3), #summary-table td:nth-child(3) { width: 7%; }
+#summary-table th:nth-child(4), #summary-table td:nth-child(4) { width: 7%; }
+#summary-table th:nth-child(5), #summary-table td:nth-child(5) { width: 14%; }
+#summary-table th:nth-child(6), #summary-table td:nth-child(6) { width: 11%; }
+#summary-table th:nth-child(7), #summary-table td:nth-child(7) { width: 8%; }
+#summary-table th:nth-child(8), #summary-table td:nth-child(8) { width: 7%; }
+#summary-table th:nth-child(9), #summary-table td:nth-child(9) { width: 9%; }
+#summary-table th:nth-child(10), #summary-table td:nth-child(10) { width: 13%; }
+
+#bot-table { min-width: 920px; }
+#bot-table th:nth-child(1), #bot-table td:nth-child(1) { width: 12%; }
+#bot-table th:nth-child(2), #bot-table td:nth-child(2) { width: 14%; }
+#bot-table th:nth-child(3), #bot-table td:nth-child(3) { width: 8%; }
+#bot-table th:nth-child(4), #bot-table td:nth-child(4) { width: 8%; }
+#bot-table th:nth-child(5), #bot-table td:nth-child(5) { width: 16%; }
+#bot-table th:nth-child(6), #bot-table td:nth-child(6) { width: 13%; }
+#bot-table th:nth-child(7), #bot-table td:nth-child(7) { width: 14%; }
+#bot-table th:nth-child(8), #bot-table td:nth-child(8) { width: 10%; }
+
+.name-cell { display:flex; align-items:center; gap:8px; min-width:0; }
+.name-cell .av {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: var(--mint); color: #0f6b4a; font-size: 10px; font-weight: 700;
+  display: grid; place-items: center;
+}
+.name-cell span { overflow:hidden; text-overflow:ellipsis; }
+
+.badge {
+  display: inline-block; padding: 3px 9px; border-radius: 999px;
+  font-size: 11px; font-weight: 600;
+}
+.badge-WEB { background: var(--green-soft); color: #0f6b4a; }
+.badge-MOBILE { background: #ede9fe; color: #6d28d9; }
+.badge-AGENT { background: #ffedd5; color: #c2410c; }
+.badge-BOT { background: #dcfce7; color: #15803d; }
+.badge-ACTIVE { background: var(--green-soft); color: #0f6b4a; }
+.badge-PENDING { background: #ecfdf5; color: #047857; }
+.badge-ALERT { background: #fff1f2; color: var(--red); }
+
+.side-list { display: flex; flex-direction: column; gap: 2px; max-height: 360px; overflow: auto; }
+.side-item {
+  display: grid; grid-template-columns: 36px 1fr auto; gap: 10px; align-items: center;
+  padding: 10px 6px; border-radius: 12px;
+}
+.side-item:hover { background: #f7fafb; }
+.side-av {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--green-soft); color: #0f6b4a;
+}
+.side-av .ms { font-size: 18px; }
+.side-av.alert { background: var(--red-soft); color: var(--red); }
+.side-av.agent { background: #ffedd5; color: #c2410c; }
+.side-body strong { display:block; font-size:12.5px; font-weight:600; }
+.side-body span { font-size:11px; color: var(--muted); }
+.side-time { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+
+#page-clients .card { margin-top: 0; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+.chip-list { display:flex; flex-wrap:wrap; gap:3px; }
+.chip { background:#f1f5f9; color:#334155; border-radius:999px; padding:2px 7px; font-size:10px; font-weight:600; }
+.id-cell, .secret-cell, .actions-cell { display:flex; align-items:center; gap:4px; min-width:0; }
+.select-cell { width: 2rem; text-align: center; }
+.icon-btn {
+  border:1px solid var(--border); background:#fff; color:var(--muted);
+  border-radius:6px; padding:3px 7px; font-size:10.5px; font-weight:600; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:3px; white-space:nowrap;
+}
+.icon-btn.copy-btn { padding: 4px; }
+.icon-btn svg { width: 13px; height: 13px; display:block; }
+.icon-btn .ms { font-size:14px; }
+.icon-btn:hover { border-color:var(--green-deep); background:var(--green-soft); color:var(--navy); }
+.modal-footer .btn-cancel,
+.modal-footer .btn-create {
+  min-width: 108px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 28px;
+  font-size: 14px;
+}
+.modal-overlay {
+  display:none; position:fixed; inset:0; z-index:100;
+  background: rgba(15,36,48,.45); align-items:center; justify-content:center; padding:24px;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:#fff; border-radius:12px; width:min(720px, 96vw); max-height:90vh;
+  overflow:hidden; display:flex; flex-direction:column;
+  box-shadow:0 20px 50px rgba(15,36,48,.28); border:1px solid #c5cbce;
+}
+.modal-header {
+  padding:0 24px; height:59px; flex-shrink:0;
+  background:#f4fdf9; border-bottom:1px solid #c5cbce;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.modal-title-row {
+  display:flex; align-items:center; gap:10px; min-width:0;
+}
+.modal-title-row .ms { color: var(--green); font-size: 22px; }
+.modal-header h2 {
+  font-family: Manrope, Poppins, sans-serif;
+  font-size:18px; font-weight:700; margin:0; color:#16303d;
+  letter-spacing:-.02em;
+}
+.modal-close {
+  border:0; background:transparent; color:var(--navy); cursor:pointer;
+  width:32px; height:32px; border-radius:8px; display:grid; place-items:center;
+}
+.modal-close:hover { background:rgba(22,48,61,.06); }
+.modal-body { padding:28px 24px 8px; overflow-y:auto; flex:1; }
+.modal-footer {
+  padding:16px 24px 22px;
+  display:flex; justify-content:flex-end; align-items:center; gap:12px; flex-shrink:0;
+}
+.form-grid {
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 24px;
+}
+.form-field { margin-bottom:0; }
+.form-field-span { grid-column: 1 / -1; }
+.form-field label {
+  display:flex; align-items:center; gap:4px;
+  font-size:12px; font-weight:700; margin-bottom:6px; color:var(--text);
+}
+.form-field label .req { color:#e73d5b; font-size:12px; line-height:1; }
+.form-field .hint { font-size:11px; color:var(--muted); margin-top:4px; font-weight:400; }
+.form-field input[type="text"],
+.form-field input[type="url"],
+.form-field select,
+.form-field textarea {
+  width:100%; border:1px solid var(--border); border-radius:8px;
+  padding:9px 10px; background:#fbfcfe; color:var(--text); font:inherit; font-size:13px;
+  appearance:none;
+}
+.form-field.select-wrap { position:relative; }
+.form-field.select-wrap::after {
+  content:'expand_more';
+  font-family:'Material Symbols Outlined';
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  position:absolute; right:8px; top:30px; color:var(--navy); pointer-events:none; font-size:20px;
+}
+.form-field select {
+  padding-right: 28px;
+  background-image: none;
+  height: auto;
+}
+.form-field textarea { height:auto; min-height:70px; padding:8px 12px; resize:vertical; }
+.form-field input:disabled, .form-field select:disabled, .form-field textarea:disabled {
+  background:#f1f5f9; color:var(--muted);
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+  outline: none; border-color: var(--green-deep); box-shadow: 0 0 0 3px rgba(46,216,142,.15);
+}
+.checkbox-grid {
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:8px 14px;
+  border:0; background:transparent; padding:2px 0 0; min-height:0;
+  width: max-content; max-width: 100%;
+}
+.checkbox-grid-row {
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:8px 16px;
+  width: max-content; max-width: 100%;
+}
+.checkbox-grid label {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12.5px; font-weight:500; margin:0; color:var(--text); cursor:pointer;
+  line-height: 1.2;
+}
+.checkbox-grid input {
+  accent-color: var(--green);
+  width:14px; height:14px;
+  margin:0;
+  flex-shrink:0;
+}
+.form-success {
+  display:none; background:var(--green-soft); color:#0f6b4a; border:1px solid #a7f3d0;
+  border-radius:8px; padding:10px 12px; font-size:12.5px; font-weight:600; margin-bottom:16px;
+}
+.form-success.visible { display:block; }
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+#apps-table { min-width: 1180px; table-layout: auto; }
+#apps-table th, #apps-table td { white-space: nowrap; }
+
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .hero-top { grid-template-columns: 1fr; justify-items: start; }
+  .pill-nav, .hero-actions { justify-self: start; }
+}
+@media (max-width: 720px) {
+  :root { --page-x: 16px; }
+  .kpi-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<!-- APP -->
+<section id="view-app">
+  <div class="hero">
+    <div class="hero-top">
+      <div class="brand">
+        <div class="brand-mark"><img class="brand-leaf" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAABJCAYAAACHOo5EAAADlklEQVR4nOWcwXHTQBSG//fCAEeV4FwgOSCLCoAOQgWECmJBASF3sKCChA5IBUAFiFzi5GLTgY+ZHPZn3mKHEGJHtiXb0n4zmbFG0kqf39PuWrMvgpJJTrPnTlwiom0QCYCIYAvA4GTrzeb4uLjX7QNoCWRg+wAMCfddqXm+nX4r857ulSVGxSuCO46MAAHJQueOvgD7AyA7Toj4rDsUyBcBjvPH6ZeVSSb9LHKX2APY8WLFnIpBH/1dArtxrzsgebAB/ZZvpxbxmdF5TorPu3vukn2Q7+yGUC0tETl0wq9PTj/sVh7J5DxLnOMhnH/Wlo2XjXvdfaW8mCWqOlP0HH+YK1ZLywn78Vm2X6pkfJ5lcPiIdYJ85+9r0XRN+lnES2R0nOtZqBzHTvssi+Q+0nwzHc4l6QW5poIj/P1din18PXO6Wiqsu+AYkrvTUvdWSf9QO3ZQJxw7ce9Dp5Bkcpq1/PhXSySzYe5OSRt0UWPocDhVcjSjGM0j6wnB5Gba6vU0FZHCA+xaI7Jvw99/kk7cTt2jeAURuQvXuSVdZQ9NQv/6eMknZ++bE8UxRGS/c68klRuv0EAc/4z1XpJCb9w4NvDMOiD1Ia3+h+9qICJcIFF76YQG48QlKtBnaDAi2rZnspmpOoZIdPRKsLEQjCySjZYE0JrrlWTdUASAIgAUAaAIAEUAKAJAEQCKAFAEgCIAFAGgCABFACgCQBEAigBQBIAiABQBoAgARQDosi4kkJuLiSYuLqpzJIfXN0aLeZslSfDnje1fjZNUkX+WXJPMl3ZtLAuHf6RsJXKjJAUyuLkId7Q9aIwkwePbd/BzYySVcuuCYF1SymrVFxDIxCoAq/+w/fWXJKampBAHtZaUPx3O0bRjlhFNrbJxEaSFjqs4mlpVwyJyVLQEyUdTZOFypaVKWpqKmy06ch+vq5rPahWNiuLlrHVVVvIgnFwRsGaSTPNH6VzzUktbhRR6jlcnSR6cbL1dqBIo30o/WjvrKUkenGy/LaUKwbdToqiW0wzTsgTHWHtlpa4ucrL1hqrydNEUnZa6StlctNfVBc79JA/wdN5OpijWS9t1cMf0cBoS97ozFeraFMxmKGUXVxfByjooOCRmW2ktRSVXKTehUHyPpBUI3MlUSS8GHOMBjqbVJ64KX1cGPKf4yviJ0ZV2L7MS3iHEvzK0WcdPEDkeIl9HsUn4ip4LJBAkDrT/X9Ae7Yp+A+qcf0iTAG34AAAAAElFTkSuQmCC" width="22" height="28" alt="Azentio" /></div>
+        <div class="brand-name">API Hub <span>Access</span></div>
+      </div>
+
+      <nav class="pill-nav" aria-label="Primary">
+        <button type="button" class="active" data-page="dashboard"><span class="ms">dashboard</span>Dashboard</button>
+        <button type="button" data-page="clients"><span class="ms">apps</span>Client Applications</button>
+      </nav>
+
+      <div class="hero-actions">
+        <button type="button" class="icon-round" aria-label="Search"><span class="ms">search</span></button>
+        <button type="button" class="icon-round" aria-label="Notifications"><span class="ms">notifications</span><span class="dot"></span></button>
+        <div class="user-chip" id="profile-btn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
+          <div class="avatar">MF</div>
+          <div class="user-meta"><strong>Admin</strong></div>
+          <span class="ms" style="opacity:.6">expand_more</span>
+          <div class="menu" id="profile-menu" role="menu">
+            <button type="button" id="export-btn" role="menuitem"><span class="ms">download</span>Export JSON</button>
+            <button type="button" id="logout-btn" role="menuitem"><span class="ms">logout</span>Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="welcome" id="welcome">Welcome back!</div>
+    <p class="welcome-sub hidden" id="welcome-sub">Client applications registered with the gateway for OAuth 2.0 token issuance and API access.</p>
+  </div>
+
+  <div class="content">
+    <!-- DASHBOARD -->
+    <div id="page-dashboard">
+      <section class="kpi-grid" aria-label="Key metrics">
+        <article class="kpi">
+          <div class="kpi-ico"><span class="ms">bolt</span></div>
+          <div class="lbl">Total Invocations</div>
+          <div class="val" id="kpi-invocations">–</div>
+          <div class="trend" id="kpi-invocations-sub"><span class="ms">trending_up</span>—</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-ico den"><span class="ms">block</span></div>
+          <div class="lbl">Denied Requests</div>
+          <div class="val" id="kpi-denied">–</div>
+          <div class="trend warn" id="kpi-denied-sub"><span class="ms">trending_down</span>—</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-ico bot"><span class="ms">smart_toy</span></div>
+          <div class="lbl">Bot Requests</div>
+          <div class="val" id="kpi-bot">–</div>
+          <div class="trend" id="kpi-bot-sub"><span class="ms">trending_up</span>—</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-ico apps"><span class="ms">widgets</span></div>
+          <div class="lbl">Applications in Use</div>
+          <div class="val" id="kpi-apps">–</div>
+          <div class="trend" id="kpi-apps-sub"><span class="ms">check_circle</span>registered</div>
+        </article>
+      </section>
+
+      <section class="card" style="margin-bottom:16px">
+        <div class="card-h">
+          <div>
+            <h2>Invocations by Application</h2>
+            <div class="sub" style="color:var(--muted);font-size:12px;margin-top:2px">Share of total traffic across the current view</div>
+          </div>
+        </div>
+        <div id="app-chart"></div>
+      </section>
+
+      <section class="stack-tables">
+        <article class="card table-card" id="detailed-usage">
+          <div class="card-h">
+            <div>
+              <h2>Detailed Usage</h2>
+              <div class="sub" id="status" style="color:var(--muted);font-size:12px;margin-top:2px">Loading…</div>
+            </div>
+            <div class="controls">
+              <label for="granularity" style="font-size:12px;color:var(--muted);font-weight:600">Group by</label>
+              <select id="granularity"><option value="HOUR" selected>Hour</option><option value="MINUTE">Minute</option></select>
+              <label class="search-field"><span class="ms">search</span><input type="search" id="filter" placeholder="Filter by customer or application…" /></label>
+              <label class="keep" style="margin:0;gap:6px"><input type="checkbox" id="auto-refresh-dash" /> Auto-refresh</label>
+              <button type="button" class="btn-green" id="refresh"><span class="ms">refresh</span>Refresh</button>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="dense" id="summary-table">
+              <thead>
+                <tr>
+                  <th>Time Period (UTC)</th>
+                  <th>Customer</th>
+                  <th>User</th>
+                  <th>Client Type</th>
+                  <th>Application</th>
+                  <th>Product</th>
+                  <th class="num">Invocations</th>
+                  <th class="num">Denied</th>
+                  <th class="num">Bot Detected</th>
+                  <th class="num">Payload (bytes)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card table-card" id="bot-detection">
+          <div class="card-h">
+            <div>
+              <h2>Bot Detection Instances</h2>
+              <div class="sub" id="bot-status" style="color:var(--muted);font-size:12px;margin-top:2px">Loading…</div>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="dense" id="bot-table">
+              <thead>
+                <tr>
+                  <th>Time Period (UTC)</th>
+                  <th>Customer</th>
+                  <th>User</th>
+                  <th>Client Type</th>
+                  <th>Application</th>
+                  <th>Product</th>
+                  <th>Bot Kind</th>
+                  <th class="num">Instances</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <!-- CLIENTS -->
+    <div id="page-clients" class="hidden">
+      <article class="card table-card">
+        <div class="card-h">
+          <div>
+            <h2>Registered Applications</h2>
+            <div class="sub" id="app-count-sub" style="color:var(--muted);font-size:12px;margin-top:2px">Loading…</div>
+          </div>
+          <div class="controls">
+            <label class="search-field"><span class="ms">search</span><input type="search" id="apps-filter" placeholder="Filter by name, app id or client id…" /></label>
+            <button type="button" class="btn-green" id="register-app-btn">Register Application <span class="ms">chevron_right</span></button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="dense" id="apps-table">
+            <thead>
+              <tr>
+                <th class="select-cell"><input type="checkbox" id="select-all" aria-label="Select all applications" /></th>
+                <th>App ID</th>
+                <th>Client Name</th>
+                <th>Client Type</th>
+                <th>Status</th>
+                <th>Token Endpoint Auth Method</th>
+                <th>Grant Types</th>
+                <th>Response Types</th>
+                <th>Client ID</th>
+                <th>Client Secret</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <h2 id="modal-title">Register Application</h2>
+      </div>
+      <button class="modal-close" id="modal-close-btn" type="button" aria-label="Close"><span class="ms">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-success" id="register-success">Application registered. Credentials would be issued on submit in a live environment.</div>
+      <form id="register-form">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="reg-client-name">Client name</label>
+            <input type="text" id="reg-client-name" placeholder="e.g. Partner Reporting Service" required />
+          </div>
+          <div class="form-field select-wrap">
+            <label for="reg-client-type">Client type</label>
+            <select id="reg-client-type">
+              <option value="WEB">WEB</option>
+              <option value="MOBILE">MOBILE</option>
+              <option value="AGENT">AGENT</option>
+              <option value="BOT">BOT</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="reg-client-uri">Client URI</label>
+            <input type="url" id="reg-client-uri" placeholder="https://example.com/app" />
+            <div class="hint">URL of the home page of the client.</div>
+          </div>
+          <div class="form-field">
+            <label for="reg-redirect-uris">Redirect URIs</label>
+            <textarea id="reg-redirect-uris" placeholder="https://example.com/callback, https://example.com/callback2"></textarea>
+            <div class="hint">Comma separated list of allowed redirect URIs.</div>
+          </div>
+          <div class="form-field select-wrap">
+            <label for="reg-auth-method">Token endpoint auth method</label>
+            <select id="reg-auth-method">
+              <option value="client_secret_basic">client_secret_basic</option>
+              <option value="client_secret_post" selected>client_secret_post</option>
+              <option value="none">none</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Response types</label>
+            <div class="checkbox-grid" id="reg-response-types">
+              <label><input type="checkbox" value="token" checked /> token</label>
+              <label><input type="checkbox" value="code" /> code</label>
+            </div>
+          </div>
+          <div class="form-field form-field-span">
+            <label>Grant types</label>
+            <div class="checkbox-grid checkbox-grid-row" id="reg-grant-types">
+              <label><input type="checkbox" value="password" checked /> password</label>
+              <label><input type="checkbox" value="client_credentials" /> client_credentials</label>
+              <label><input type="checkbox" value="authorization_code" /> authorization_code</label>
+              <label><input type="checkbox" value="refresh_token" /> refresh_token</label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" id="register-cancel-btn">Cancel</button>
+      <button type="submit" form="register-form" class="btn-create" id="register-submit-btn">Register <span class="ms">chevron_right</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {"HOUR": [{"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-16T06:00", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-16T05:00", "invocationCount": 1, "deniedCount": 1, "totalPayloadBytes": 100, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-16T05:00", "invocationCount": 4, "deniedCount": 4, "totalPayloadBytes": 192, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-13T04:00", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T13:00", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-12T13:00", "invocationCount": 16, "deniedCount": 0, "totalPayloadBytes": 508, "totalTokens": 2}, {"customerId": "AGENT_NOT_LICENSED_CUSTOMER", "userId": "pocuser", "clientType": "AGENT", "application": "Partner Integration API", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:00", "invocationCount": 1, "deniedCount": 1, "totalPayloadBytes": 100, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "BOT", "application": "Automated Bot Service", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:00", "invocationCount": 21, "deniedCount": 1, "totalPayloadBytes": 870, "totalTokens": 4}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "MOBILE", "application": "Customer Mobile App", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:00", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:00", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-12T11:00", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "AGENT_NOT_LICENSED_CUSTOMER", "userId": "pocuser", "clientType": "AGENT", "application": "Partner Integration API", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:00", "invocationCount": 3, "deniedCount": 3, "totalPayloadBytes": 300, "totalTokens": 2}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "BOT", "application": "Automated Bot Service", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:00", "invocationCount": 63, "deniedCount": 3, "totalPayloadBytes": 2610, "totalTokens": 11}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "MOBILE", "application": "Customer Mobile App", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:00", "invocationCount": 12, "deniedCount": 0, "totalPayloadBytes": 462, "totalTokens": 2}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:00", "invocationCount": 12, "deniedCount": 0, "totalPayloadBytes": 462, "totalTokens": 2}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-09T12:00", "invocationCount": 24, "deniedCount": 0, "totalPayloadBytes": 762, "totalTokens": 3}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "false", "botKind": null, "timePeriod": "2026-10-09T11:00", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "false", "botKind": null, "timePeriod": "2026-10-09T10:00", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 127, "totalTokens": 1}], "MINUTE": [{"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-16T06:24", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 127, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-16T06:23", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 127, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-16T05:57", "invocationCount": 4, "deniedCount": 4, "totalPayloadBytes": 192, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-16T05:56", "invocationCount": 1, "deniedCount": 1, "totalPayloadBytes": 100, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-13T04:08", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-12T13:34", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-12T13:08", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T13:06", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "AGENT_NOT_LICENSED_CUSTOMER", "userId": "pocuser", "clientType": "AGENT", "application": "Partner Integration API", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:54", "invocationCount": 1, "deniedCount": 1, "totalPayloadBytes": 100, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "BOT", "application": "Automated Bot Service", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:54", "invocationCount": 21, "deniedCount": 1, "totalPayloadBytes": 870, "totalTokens": 4}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "MOBILE", "application": "Customer Mobile App", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:54", "invocationCount": 2, "deniedCount": 0, "totalPayloadBytes": 41, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-12T11:54", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "MOBILE", "application": "Customer Mobile App", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:53", "invocationCount": 2, "deniedCount": 0, "totalPayloadBytes": 113, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-12T11:53", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "BOT", "application": "Automated Bot Service", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:41", "invocationCount": 21, "deniedCount": 1, "totalPayloadBytes": 870, "totalTokens": 4}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-09T12:41", "invocationCount": 7, "deniedCount": 0, "totalPayloadBytes": 171, "totalTokens": 1}, {"customerId": "AGENT_NOT_LICENSED_CUSTOMER", "userId": "pocuser", "clientType": "AGENT", "application": "Partner Integration API", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:40", "invocationCount": 1, "deniedCount": 1, "totalPayloadBytes": 100, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "MOBILE", "application": "Customer Mobile App", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:40", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:40", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-09T12:40", "invocationCount": 1, "deniedCount": 0, "totalPayloadBytes": 83, "totalTokens": 1}, {"customerId": "AGENT_NOT_LICENSED_CUSTOMER", "userId": "pocuser", "clientType": "AGENT", "application": "Partner Integration API", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:37", "invocationCount": 1, "deniedCount": 1, "totalPayloadBytes": 100, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "BOT", "application": "Automated Bot Service", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:37", "invocationCount": 21, "deniedCount": 1, "totalPayloadBytes": 870, "totalTokens": 4}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "MOBILE", "application": "Customer Mobile App", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:37", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:37", "invocationCount": 2, "deniedCount": 0, "totalPayloadBytes": 41, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-09T12:37", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:36", "invocationCount": 2, "deniedCount": 0, "totalPayloadBytes": 113, "totalTokens": 1}, {"customerId": "AGENT_NOT_LICENSED_CUSTOMER", "userId": "pocuser", "clientType": "AGENT", "application": "Partner Integration API", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:01", "invocationCount": 1, "deniedCount": 1, "totalPayloadBytes": 100, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "BOT", "application": "Automated Bot Service", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:01", "invocationCount": 21, "deniedCount": 1, "totalPayloadBytes": 870, "totalTokens": 4}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "MOBILE", "application": "Customer Mobile App", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:01", "invocationCount": 1, "deniedCount": 0, "totalPayloadBytes": 22, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "headless_chrome", "timePeriod": "2026-10-09T12:01", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "MOBILE", "application": "Customer Mobile App", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:00", "invocationCount": 3, "deniedCount": 0, "totalPayloadBytes": 132, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "true", "botKind": "cli-tool", "timePeriod": "2026-10-09T12:00", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 154, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "false", "botKind": null, "timePeriod": "2026-10-09T11:28", "invocationCount": 8, "deniedCount": 0, "totalPayloadBytes": 254, "totalTokens": 1}, {"customerId": "Momentum Finance", "userId": "pocuser", "clientType": "WEB", "application": "Customer Web Portal", "product": "Loan Origination", "botDetection": "false", "botKind": null, "timePeriod": "2026-10-09T10:21", "invocationCount": 4, "deniedCount": 0, "totalPayloadBytes": 127, "totalTokens": 1}]};
+const APPS = [{"appId": "app_2f6c1a9e40d1", "clientName": "Customer Web Portal", "clientType": "WEB", "status": "ACTIVE", "clientUri": "https://loans.momentumfinance.example/portal", "redirectUris": "https://loans.momentumfinance.example/portal/callback", "tokenEndpointAuthMethod": "client_secret_post", "grantTypes": ["password"], "responseTypes": ["token"], "clientId": "web-client", "clientSecret": "Fw08Tmjqtvr1Yrkl1ZECWJK9RkqYFUk4"}, {"appId": "app_7b3d9f21c856", "clientName": "Customer Mobile App", "clientType": "MOBILE", "status": "ACTIVE", "clientUri": "https://loans.momentumfinance.example/mobile", "redirectUris": "https://loans.momentumfinance.example/mobile/callback, momentumfinance://auth/callback", "tokenEndpointAuthMethod": "client_secret_post", "grantTypes": ["password"], "responseTypes": ["token"], "clientId": "mobile-client", "clientSecret": "4rdn6h7gVRGps028tsbNHqF7pOmOmcWj"}, {"appId": "app_c4e08a715f3d", "clientName": "Partner Integration API", "clientType": "AGENT", "status": "ACTIVE", "clientUri": "https://partners.momentumfinance.example/agent-integration", "redirectUris": "https://partners.momentumfinance.example/agent-integration/callback", "tokenEndpointAuthMethod": "client_secret_post", "grantTypes": ["password"], "responseTypes": ["token"], "clientId": "agent-client", "clientSecret": "ESviV67rw0AuVU6RR267XdIuSAsGAAYI"}, {"appId": "app_9a2f56d1e8b7", "clientName": "Automated Bot Service", "clientType": "BOT", "status": "ACTIVE", "clientUri": "https://ops.momentumfinance.example/bot-service", "redirectUris": "", "tokenEndpointAuthMethod": "client_secret_post", "grantTypes": ["password"], "responseTypes": ["token"], "clientId": "bot-client", "clientSecret": "7aSTinUrxj61atHy6nS8LM0E4zvzHFY6"}];
+const BAR_COLORS = ['#16303d','#0d9488','#2ed88e','#86efac','#a7f3d0'];
+
+let allRows = [];
+let autoTimer = null;
+
+const $ = (id) => document.getElementById(id);
+function esc(v){ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function isBot(r){ return String(r.botDetection).toLowerCase()==='true'; }
+function badge(t){ return t ? `<span class="badge badge-${esc(t)}">${esc(t)}</span>` : ''; }
+function initials(s){ return String(s||'?').split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase(); }
+
+function showApp(page='dashboard'){
+  setPage(page);
+}
+function setPage(page){
+  document.querySelectorAll('.pill-nav button').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+  ['dashboard','clients'].forEach(p=>{
+    const el = $('page-'+p); if (el) el.classList.toggle('hidden', p!==page);
+  });
+  $('welcome').textContent = page === 'clients' ? 'Client Applications' : 'Welcome back!';
+  $('welcome-sub').classList.toggle('hidden', page !== 'clients');
+  if (page==='dashboard') loadSummary();
+  if (page==='clients') renderApps();
+}
+
+function loadSummary(){
+  const g = $('granularity').value;
+  allRows = DATA[g] || DATA.HOUR;
+  render();
+  $('status').textContent = allRows.length + ' rows – last updated ' + new Date().toLocaleTimeString();
+}
+
+function filteredRows(){
+  const term = ($('filter').value||'').trim().toLowerCase();
+  if (!term) return allRows;
+  return allRows.filter(r => (r.customerId||'').toLowerCase().includes(term) || (r.application||'').toLowerCase().includes(term));
+}
+
+function render(){
+  const rows = filteredRows();
+  renderKpis(rows); renderChart(rows); renderTable(rows); renderBotTable(rows);
+}
+
+function renderKpis(rows){
+  const inv = rows.reduce((s,r)=>s+r.invocationCount,0);
+  const den = rows.reduce((s,r)=>s+r.deniedCount,0);
+  const bot = rows.filter(isBot).reduce((s,r)=>s+r.invocationCount,0);
+  const apps = new Set(rows.map(r=>r.application).filter(Boolean)).size;
+  const denRate = inv ? ((den/inv)*100).toFixed(1) : '0.0';
+  const botRate = inv ? ((bot/inv)*100).toFixed(1) : '0.0';
+  $('kpi-invocations').textContent = inv.toLocaleString();
+  $('kpi-invocations-sub').innerHTML = `<span class="ms">trending_up</span>${rows.length} usage rows`;
+  $('kpi-denied').textContent = den.toLocaleString();
+  $('kpi-denied-sub').innerHTML = `<span class="ms">percent</span>${denRate}% denial rate`;
+  $('kpi-bot').textContent = bot.toLocaleString();
+  $('kpi-bot-sub').innerHTML = `<span class="ms">trending_up</span>${botRate}% of invocations`;
+  $('kpi-apps').textContent = apps.toLocaleString();
+  $('kpi-apps-sub').innerHTML = `<span class="ms">check_circle</span>registered apps`;
+}
+
+function shortApp(name){
+  return ({
+    'Customer Web Portal':'Web Portal',
+    'Automated Bot Service':'Bot Service',
+    'Customer Mobile App':'Mobile App',
+    'Partner Integration API':'Partner API'
+  })[name] || name;
+}
+
+function renderChart(rows){
+  const chart = $('app-chart');
+  const totals = new Map();
+  for (const row of rows){
+    const k = row.application || 'Unattributed';
+    totals.set(k, (totals.get(k)||0)+row.invocationCount);
+  }
+  const entries = [...totals.entries()].sort((a,b)=>b[1]-a[1]);
+  if (!entries.length){ chart.innerHTML = '<div style="color:var(--muted)">No usage yet.</div>'; return; }
+  const max = entries[0][1] || 1;
+  chart.innerHTML = entries.map(([name,count],i)=>`
+    <div class="bar-row">
+      <div class="bar-name" title="${esc(name)}">${esc(shortApp(name))}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.max(4,(count/max)*100)}%;background:${BAR_COLORS[i%BAR_COLORS.length]}"></div></div>
+      <div class="bar-val">${count}</div>
+    </div>`).join('');
+}
+
+function renderTable(rows){
+  const tbody = document.querySelector('#summary-table tbody');
+  tbody.innerHTML = rows.map(r => {
+    const botCount = isBot(r) ? r.invocationCount : 0;
+    return `
+    <tr>
+      <td title="${esc(r.timePeriod)}">${esc(r.timePeriod)}</td>
+      <td>
+        <div class="name-cell">
+          <div class="av">${esc(initials(r.customerId))}</div>
+          <span title="${esc(r.customerId)}">${esc(r.customerId)}</span>
+        </div>
+      </td>
+      <td>${esc(r.userId||'')}</td>
+      <td>${badge(r.clientType||'')}</td>
+      <td title="${esc(r.application||'')}">${esc(r.application||'')}</td>
+      <td title="${esc(r.product||'')}">${esc(r.product||'')}</td>
+      <td class="num">${r.invocationCount.toLocaleString()}</td>
+      <td class="num">${r.deniedCount ? `<span class="badge badge-ALERT">${r.deniedCount}</span>` : '0'}</td>
+      <td class="num">${botCount ? `<span class="badge badge-ALERT">${botCount}</span>` : '0'}</td>
+      <td class="num">${r.totalPayloadBytes.toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderBotTable(rows){
+  const botRows = rows.filter(isBot);
+  $('bot-status').textContent = botRows.length + ' bot detection ' + (botRows.length === 1 ? 'row' : 'rows');
+  const tbody = document.querySelector('#bot-table tbody');
+  tbody.innerHTML = botRows.map(r => `
+    <tr>
+      <td>${esc(r.timePeriod)}</td>
+      <td>${esc(r.customerId)}</td>
+      <td>${esc(r.userId||'')}</td>
+      <td>${badge(r.clientType||'')}</td>
+      <td>${esc(r.application||'')}</td>
+      <td>${esc(r.product||'')}</td>
+      <td>${esc(r.botKind||'unknown')}</td>
+      <td class="num">${r.invocationCount.toLocaleString()}</td>
+    </tr>`).join('') || '<tr><td colspan="8" style="color:var(--muted)">No bot detections recorded for this view.</td></tr>';
+}
+
+const COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+function renderChips(values){
+  return `<div class="chip-list">${(values||[]).map(v => `<span class="chip">${esc(v)}</span>`).join('')}</div>`;
+}
+function maskSecret(secret){ return '•'.repeat(Math.min((secret||'').length, 16)); }
+
+function renderApps(){
+  const term = ($('apps-filter').value||'').trim().toLowerCase();
+  const rows = !term ? APPS : APPS.filter(a =>
+    a.clientName.toLowerCase().includes(term) || a.appId.toLowerCase().includes(term) || a.clientId.toLowerCase().includes(term));
+  $('app-count-sub').textContent = rows.length + ' of ' + APPS.length + ' applications';
+  const selectAll = $('select-all');
+  if (selectAll) selectAll.checked = false;
+  document.querySelector('#apps-table tbody').innerHTML = rows.map(a => `
+    <tr data-app-id="${esc(a.appId)}">
+      <td class="select-cell"><input type="checkbox" class="row-select" aria-label="Select ${esc(a.clientName)}" /></td>
+      <td>
+        <div class="id-cell">
+          <code class="mono">${esc(a.appId)}</code>
+          <button type="button" class="icon-btn copy-btn" data-action="copy" data-value="${esc(a.appId)}" title="Copy" aria-label="Copy App ID">${COPY_ICON}</button>
+        </div>
+      </td>
+      <td>${esc(a.clientName)}</td>
+      <td>${badge(a.clientType)}</td>
+      <td><span class="badge badge-${a.status}">${a.status==='ACTIVE'?'Active':'Inactive'}</span></td>
+      <td>${esc(a.tokenEndpointAuthMethod)}</td>
+      <td>${renderChips(a.grantTypes)}</td>
+      <td>${renderChips(a.responseTypes)}</td>
+      <td>
+        <div class="id-cell">
+          <code class="mono">${esc(a.clientId)}</code>
+          <button type="button" class="icon-btn copy-btn" data-action="copy" data-value="${esc(a.clientId)}" title="Copy" aria-label="Copy Client ID">${COPY_ICON}</button>
+        </div>
+      </td>
+      <td>
+        <div class="secret-cell">
+          <code class="mono secret-value" data-secret="${esc(a.clientSecret)}">${maskSecret(a.clientSecret)}</code>
+          <button type="button" class="icon-btn" data-action="toggle-secret">Show</button>
+          <button type="button" class="icon-btn copy-btn" data-action="copy" data-value="${esc(a.clientSecret)}" title="Copy" aria-label="Copy Client Secret">${COPY_ICON}</button>
+        </div>
+      </td>
+      <td>
+        <div class="actions-cell">
+          <button type="button" class="icon-btn" data-action="view">View</button>
+          <button type="button" class="icon-btn" data-action="edit">Edit</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function copyToClipboard(button, value){
+  const originalTitle = button.title;
+  const reset = () => { button.innerHTML = COPY_ICON; button.title = originalTitle; };
+  const showFeedback = (ok) => {
+    button.innerHTML = ok ? CHECK_ICON : COPY_ICON;
+    button.title = ok ? 'Copied!' : 'Copy failed';
+    setTimeout(reset, 1200);
+  };
+  if (!navigator.clipboard || !navigator.clipboard.writeText) { showFeedback(false); return; }
+  navigator.clipboard.writeText(value).then(() => showFeedback(true)).catch(() => showFeedback(false));
+}
+
+let currentAppId = null;
+const formFields = {
+  name: null, type: null, uri: null, redirectUris: null, authMethod: null
+};
+function initFormFields(){
+  formFields.name = $('reg-client-name');
+  formFields.type = $('reg-client-type');
+  formFields.uri = $('reg-client-uri');
+  formFields.redirectUris = $('reg-redirect-uris');
+  formFields.authMethod = $('reg-auth-method');
+}
+function setFormDisabled(disabled){
+  Object.values(formFields).forEach(el => { if (el) el.disabled = disabled; });
+  document.querySelectorAll('#register-form input[type="checkbox"]').forEach(cb => { cb.disabled = disabled; });
+}
+function populateForm(app){
+  formFields.name.value = app.clientName;
+  formFields.type.value = app.clientType;
+  formFields.uri.value = app.clientUri || '';
+  formFields.redirectUris.value = app.redirectUris || '';
+  formFields.authMethod.value = app.tokenEndpointAuthMethod;
+  document.querySelectorAll('#reg-grant-types input').forEach(cb => { cb.checked = (app.grantTypes||[]).includes(cb.value); });
+  document.querySelectorAll('#reg-response-types input').forEach(cb => { cb.checked = (app.responseTypes||[]).includes(cb.value); });
+}
+function openRegisterModal(){
+  currentAppId = null;
+  $('modal-title').textContent = 'Register Application';
+  $('register-success').classList.remove('visible');
+  $('register-form').reset();
+  setFormDisabled(false);
+  const submitBtn = $('register-submit-btn');
+  submitBtn.style.display = '';
+  submitBtn.innerHTML = 'Register <span class="ms">chevron_right</span>';
+  $('register-cancel-btn').textContent = 'Cancel';
+  $('modal-overlay').classList.add('open');
+}
+function openViewModal(app){
+  currentAppId = app.appId;
+  $('modal-title').textContent = 'View Application';
+  $('register-success').classList.remove('visible');
+  populateForm(app);
+  setFormDisabled(true);
+  $('register-submit-btn').style.display = 'none';
+  $('register-cancel-btn').textContent = 'Close';
+  $('modal-overlay').classList.add('open');
+}
+function openEditModal(app){
+  currentAppId = app.appId;
+  $('modal-title').textContent = 'Edit Application';
+  $('register-success').classList.remove('visible');
+  populateForm(app);
+  setFormDisabled(false);
+  const submitBtn = $('register-submit-btn');
+  submitBtn.style.display = '';
+  submitBtn.innerHTML = 'Save Changes <span class="ms">chevron_right</span>';
+  $('register-cancel-btn').textContent = 'Cancel';
+  $('modal-overlay').classList.add('open');
+}
+function closeModal(){ $('modal-overlay').classList.remove('open'); }
+
+/* events */
+document.querySelectorAll('.pill-nav button').forEach(b => b.addEventListener('click', () => setPage(b.dataset.page)));
+$('refresh').addEventListener('click', () => loadSummary());
+$('granularity').addEventListener('change', () => loadSummary());
+$('filter').addEventListener('input', render);
+$('apps-filter').addEventListener('input', renderApps);
+$('auto-refresh-dash').addEventListener('change', e => {
+  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+  if (e.target.checked) autoTimer = setInterval(() => loadSummary(), 10000);
+});
+$('profile-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  const menu = $('profile-menu');
+  const open = !menu.classList.contains('open');
+  menu.classList.toggle('open', open);
+  $('profile-btn').setAttribute('aria-expanded', String(open));
+});
+document.addEventListener('click', e => {
+  if (!$('profile-btn').contains(e.target)) $('profile-menu').classList.remove('open');
+});
+$('logout-btn').addEventListener('click', () => { $('profile-menu').classList.remove('open'); });
+$('export-btn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(DATA.HOUR,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='metering-export-momentum.json'; a.click();
+});
+
+initFormFields();
+$('select-all').addEventListener('change', e => {
+  document.querySelectorAll('.row-select').forEach(cb => { cb.checked = e.target.checked; });
+});
+document.querySelector('#apps-table tbody').addEventListener('click', e => {
+  const toggleBtn = e.target.closest('[data-action="toggle-secret"]');
+  if (toggleBtn) {
+    const code = toggleBtn.previousElementSibling;
+    const show = toggleBtn.textContent.trim() === 'Show';
+    code.textContent = show ? code.dataset.secret : maskSecret(code.dataset.secret);
+    toggleBtn.textContent = show ? 'Hide' : 'Show';
+    return;
+  }
+  const copyBtn = e.target.closest('[data-action="copy"]');
+  if (copyBtn) {
+    copyToClipboard(copyBtn, copyBtn.dataset.value);
+    return;
+  }
+  const row = e.target.closest('tr[data-app-id]');
+  if (!row) return;
+  const app = APPS.find(a => a.appId === row.dataset.appId);
+  if (!app) return;
+  if (e.target.closest('[data-action="view"]')) openViewModal(app);
+  else if (e.target.closest('[data-action="edit"]')) openEditModal(app);
+});
+$('register-app-btn').addEventListener('click', openRegisterModal);
+$('register-cancel-btn').addEventListener('click', closeModal);
+$('modal-close-btn').addEventListener('click', closeModal);
+$('modal-overlay').addEventListener('click', e => { if (e.target === $('modal-overlay')) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && $('modal-overlay').classList.contains('open')) closeModal();
+});
+$('register-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const success = $('register-success');
+  success.textContent = currentAppId
+    ? 'Application updated. Changes are not persisted in this demo.'
+    : 'Application registered. Credentials would be issued on submit in a live environment.';
+  success.classList.add('visible');
+  setTimeout(closeModal, 1400);
+});
+
+showApp('dashboard');
+</script>
+</body>
+</html>
